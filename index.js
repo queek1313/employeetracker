@@ -59,12 +59,12 @@ function employee() {
 function addEmployee() {
     inquirer.prompt([{
         type: "input",
-        message: "Employee first name:",
+        message: "employee first name:",
         name: "firstName"
     },
     {
         type: "input",
-        message: "Employee last name:",
+        message: "employee last name:",
         name: "lastName"
     },
     {
