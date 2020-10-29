@@ -12,7 +12,7 @@ CREATE TABLE department(
 CREATE TABLE role(
     id INTEGER(11) AUTO_INCREMENT NOT NULL,
     title VARCHAR(30),
-    salary DECIMAL(10.3),
+    salary DECIMAL(10,3),
     department_id INTEGER(10),
     PRIMARY KEY (id)
 );
@@ -25,7 +25,7 @@ CREATE TABLE employee(
 );
 
 INSERT INTO employee(first_name,last_name,role_id,manager_id)
-VALUES ("John","Doe",12,123),("Jane","Doe",13,123);
+VALUES ("John","Doe",1,NULL),("Jane","Thomas",2,1),("Sam","Smith",1,1);
 
 INSERT INTO department(name)
 VALUES ("Front Desk"),("House Keeping"),("Sales");

@@ -20,11 +20,11 @@ function questions() {
     inquirer.prompt({
         type: "list",
         message: "Select",
-        choices: ["view all employees", "add employee", "view departments", "add department", "add role", "view role", "cancel"],
+        choices: ["view employees", "add employee", "view departments", "add department", "add role", "view roles", "update role id", "update manager id","delete employee", "cancel"],
         name: "choice"
     }).then(answers => {
         switch (answers.choice) {
-            case "view all employees":
+            case "view employees":
                 employee()
                 break;
             case "add employee":
@@ -39,9 +39,19 @@ function questions() {
             case "add role":
                 addRole()
                 break;
-            case "view role":
+            case "view roles":
                 viewRole()
                 break;
+            case "update role id":
+                updateRole()
+                break;
+            case "update manager id":
+                updateManager()
+                break;
+            case "delete employee":
+                deleteEmployee()
+                break;
+
             default:
                 connection.end()
                 break;
@@ -50,7 +60,8 @@ function questions() {
 }
 
 function employee() {
-    connection.query("SELECT * FROM employee", function (err, res) {
+    connection.query("SELECT employee.id, employee.first_name, employee.last_name,role.title, department.name AS department, role.salary, manager.first_name AS manager FROM employee LEFT JOIN role on employee.role_id=role.id LEFT JOIN department on role.department_id=department.id LEFT JOIN employee manager on manager.id=employee.manager_id", function (err, res) {
+        if (err) throw err;
         console.table(res);
         questions();
     })
@@ -135,8 +146,61 @@ function addRole() {
 
 function viewRole() {
     connection.query("SELECT * FROM role", function (err, res) {
+        if (err) throw err;
         console.table(res);
         questions();
     })
 
+}
+function updateRole() {
+    inquirer.prompt([{
+        type: "input",
+        message: "employee first name:",
+        name: "firstName"
+    },
+    {
+        type: "number",
+        message: "new role id:",
+        name: "newId"
+    },
+    ]).then(function (res) {
+        connection.query("UPDATE employee SET role_id =? WHERE first_name=?", [res.newId, res.firstName], function (err, res) {
+            if (err) throw err;
+            employee();
+        });
+        questions();
+    });
+}
+function updateManager() {
+    inquirer.prompt([{
+        type: "input",
+        message: "employee first name:",
+        name: "firstName"
+    },
+    {
+        type: "number",
+        message: "new manager id:",
+        name: "newId"
+    },
+    ]).then(function (res) {
+        connection.query("UPDATE employee SET manager_id =? WHERE first_name=?", [res.newId, res.firstName], function (err, res) {
+            if (err) throw err;
+            employee();
+        });
+        questions();
+    });
+}   
+function deleteEmployee(){
+    inquirer.prompt([{
+        type: "input",
+        message: "employee first name to remove:",
+        name: "firstName"
+    },
+    ]).then(function(res){
+        connection.query("DELETE FROM employee WHERE first_name=?",res.firstName,function (err, res){
+            if (err) throw err;
+            employee();
+        });
+        questions();
+        })
 }
