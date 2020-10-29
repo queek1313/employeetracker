@@ -20,7 +20,7 @@ function questions() {
     inquirer.prompt({
         type: "list",
         message: "Select",
-        choices: ["view employees", "add employee", "view departments", "add department", "add role", "view roles", "update role id", "update manager id","delete employee", "cancel"],
+        choices: ["view employees", "add employee", "view departments", "add department", "add role", "view roles", "update role id", "update manager id", "delete employee", "cancel"],
         name: "choice"
     }).then(answers => {
         switch (answers.choice) {
@@ -168,7 +168,6 @@ function updateRole() {
             if (err) throw err;
             employee();
         });
-        questions();
     });
 }
 function updateManager() {
@@ -187,20 +186,20 @@ function updateManager() {
             if (err) throw err;
             employee();
         });
-        questions();
+
     });
-}   
-function deleteEmployee(){
+}
+function deleteEmployee() {
     inquirer.prompt([{
         type: "input",
         message: "employee first name to remove:",
         name: "firstName"
     },
-    ]).then(function(res){
-        connection.query("DELETE FROM employee WHERE first_name=?",res.firstName,function (err, res){
+    ]).then(function (res) {
+        connection.query("DELETE FROM employee WHERE first_name=?", res.firstName, function (err, res) {
             if (err) throw err;
             employee();
         });
-        questions();
-        })
+
+    })
 }
